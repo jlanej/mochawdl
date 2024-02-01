@@ -37,6 +37,7 @@ workflow mocha {
     String target = "calls" # vcf pvcf calls pngs
     Boolean realign = false
     Boolean wgs = false
+    Boolean skip_wgs_phase_rare = false
     Boolean gtc_output = false # only for idat mode
     Boolean chp_output = false # only for cel mode
     Int idat_batch_size = 48
@@ -445,7 +446,7 @@ workflow mocha {
           scaffold_region = intervals_tbl[0][idx] + ":" + (1 + buffer_beg) + "-" + buffer_end,
           chr = intervals_tbl[0][idx],
           mhc = if defined(ref.mhc_reg) then intervals_tbl[0][idx] == select_first([mhc_chr]) && beg <= select_first([mhc_end]) && end > select_first([mhc_beg]) else false,
-          maf = if wgs && n_smpls > 2000 then 0.001 else 0.0, # see https://odelaneau.github.io/shapeit5/docs/documentation/phase_rare/
+          maf = if wgs && n_smpls > 2000 && !skip_wgs_phase_rare then 0.001 else 0.0, # see https://odelaneau.github.io/shapeit5/docs/documentation/phase_rare/
           phase_extra_args = phase_extra_args,
           docker = docker_repository_with_sep + shapeit5_docker
       }
