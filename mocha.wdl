@@ -1832,7 +1832,6 @@ task vcf_shapeit5 {
 
   command <<<
     set -euo pipefail
-    echo "current maf is ~{maf}"
     echo "~{sep("\n", select_all([unphased_vcf_file, unphased_vcf_idx, genetic_map_file, pedigree_file, ref_vcf_file, ref_vcf_idx]))}" | \
       tr '\n' '\0' | xargs -0 mv -t .
     ~{if defined(ref_fasta_fai) then "mv \"" + select_first([ref_fasta_fai]) + "\" ." else ""}
